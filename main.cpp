@@ -1,6 +1,7 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
+#include <algorithm>
 //Ahoj kamoš!!
 using namespace std;
 
@@ -11,9 +12,12 @@ bool gameIsRunning = true;
 int inputValue = 0;
 int tenFrame = 10;
 
-int row = 0, column = 4;
-int tetrominoType = 7;
+int randomBag[7] = {1, 2, 3, 4, 5, 6, 7};
+int bagNum = 0;
 
+int row = 0, column = 4;
+int tetrominoType;
+int tetrominoBlock1[2], tetrominoBlock2[2], tetrominoBlock3[2], tetrominoBlock4[2];
 
 int height = 21, wight = 10;
 int pole[21][10] = {
@@ -113,6 +117,10 @@ void block(int renderBlockType)
             SetColor(7, 0);
             cout << "███";
             break;
+        case 9:
+            SetColor(14, 0);
+            cout << "███";
+            break;
     }
 }
 
@@ -145,6 +153,9 @@ int rendering() {
             else if (pole[j][i] == 8) {
                 block(8);
             }
+            else if (pole[j][i] == 9) {
+                block(9);
+            }
             else {
                 block(0);
             }
@@ -168,188 +179,280 @@ void tetromino(int tetrominoType) {
 
     switch(tetrominoType) {
         case 1:
-            pole[row][column - 1] = 1;
-            pole[row][column] = 1;
-            pole[row][column + 1] = 1;
-            pole[row][column + 2] = 1;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = -1;
+            tetrominoBlock2[0] = 0;
+            tetrominoBlock2[1] = 0;
+            tetrominoBlock3[0] = 0;
+            tetrominoBlock3[1] = 1;
+            tetrominoBlock4[0] = 0;
+            tetrominoBlock4[1] = 2;
 
             break;
         case 11:
-            pole[row - 2][column + 1] = 1;
-            pole[row - 1][column + 1] = 1;
-            pole[row][column + 1] = 1;
-            pole[row + 1][column + 1] = 1;
+            tetrominoBlock1[0] = -2;
+            tetrominoBlock1[1] = 1;
+            tetrominoBlock2[0] = -1;
+            tetrominoBlock2[1] = 1;
+            tetrominoBlock3[0] = 0;
+            tetrominoBlock3[1] = 1;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = 1;
 
             break;
         case 2:
-            pole[row][column - 1] = 2;
-            pole[row + 1][column - 1] = 2;
-            pole[row + 1][column] = 2;
-            pole[row + 1][column + 1] = 2;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = -1;
+            tetrominoBlock2[0] = 1;
+            tetrominoBlock2[1] = -1;
+            tetrominoBlock3[0] = 1;
+            tetrominoBlock3[1] = 0;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = 1;
+
             break;
         case 12:
-            pole[row][column] = 2;
-            pole[row][column + 1] = 2;
-            pole[row + 1][column] = 2;
-            pole[row + 2][column] = 2;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = 0;
+            tetrominoBlock2[1] = 1;
+            tetrominoBlock3[0] = 1;
+            tetrominoBlock3[1] = 0;
+            tetrominoBlock4[0] = 2;
+            tetrominoBlock4[1] = 0;
+
             break;
         case 22:
-            pole[row][column] = 2;
-            pole[row][column - 1] = 2;
-            pole[row][column + 1] = 2;
-            pole[row + 1][column + 1] = 2;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = 0;
+            tetrominoBlock2[1] = -1;
+            tetrominoBlock3[0] = 0;
+            tetrominoBlock3[1] = 1;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = 1;
+
             break;
         case 32:
-            pole[row - 1][column] = 2;
-            pole[row][column] = 2;
-            pole[row + 1][column] = 2;
-            pole[row + 1][column - 1] = 2;
+            tetrominoBlock1[0] = -1;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = 0;
+            tetrominoBlock2[1] = 0;
+            tetrominoBlock3[0] = 1;
+            tetrominoBlock3[1] = 0;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = -1;
+
             break;
         case 3:
-            pole[row][column + 1] = 3;
-            pole[row + 1][column - 1] = 3;
-            pole[row + 1][column] = 3;
-            pole[row + 1][column + 1] = 3;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = 1;
+            tetrominoBlock2[0] = 1;
+            tetrominoBlock2[1] = -1;
+            tetrominoBlock3[0] = 1;
+            tetrominoBlock3[1] = 0;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = 1;
+
             break;
         case 13:
-            pole[row][column] = 3;
-            pole[row + 1][column] = 3;
-            pole[row + 2][column] = 3;
-            pole[row + 2][column + 1] = 3;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = 1;
+            tetrominoBlock2[1] = 0;
+            tetrominoBlock3[0] = 2;
+            tetrominoBlock3[1] = 0;
+            tetrominoBlock4[0] = 2;
+            tetrominoBlock4[1] = 1;
+
             break;
         case 23:
-            pole[row][column - 1] = 3;
-            pole[row][column] = 3;
-            pole[row + 1][column - 1] = 3;
-            pole[row][column + 1] = 3;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = -1;
+            tetrominoBlock2[0] = 0;
+            tetrominoBlock2[1] = 0;
+            tetrominoBlock3[0] = 1;
+            tetrominoBlock3[1] = -1;
+            tetrominoBlock4[0] = 0;
+            tetrominoBlock4[1] = 1;
+
             break;
         case 33:
-            pole[row - 1][column - 1] = 3;
-            pole[row - 1][column] = 3;
-            pole[row][column] = 3;
-            pole[row + 1][column] = 3;
+            tetrominoBlock1[0] = -1;
+            tetrominoBlock1[1] = -1;
+            tetrominoBlock2[0] = -1;
+            tetrominoBlock2[1] = 0;
+            tetrominoBlock3[0] = 0;
+            tetrominoBlock3[1] = 0;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = 0;
+
             break;
         case 4:
-            pole[row][column] = 4;
-            pole[row][column - 1] = 4;
-            pole[row + 1][column] = 4;
-            pole[row + 1][column - 1] = 4;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = 0;
+            tetrominoBlock2[1] = -1;
+            tetrominoBlock3[0] = 1;
+            tetrominoBlock3[1] = 0;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = -1;
+
             break;
         case 5:
-            pole[row][column] = 5;
-            pole[row][column + 1] = 5;
-            pole[row + 1][column] = 5;
-            pole[row + 1][column - 1] = 5;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = 0;
+            tetrominoBlock2[1] = 1;
+            tetrominoBlock3[0] = 1;
+            tetrominoBlock3[1] = 0;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = -1;
+
             break;
         case 15:
-            pole[row][column] = 5;
-            pole[row - 1][column] = 5;
-            pole[row][column + 1] = 5;
-            pole[row + 1][column + 1] = 5;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = -1;
+            tetrominoBlock2[1] = 0;
+            tetrominoBlock3[0] = 0;
+            tetrominoBlock3[1] = 1;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = 1;
+
             break;
         case 6:
-            pole[row][column] = 6;
-            pole[row][column - 1] = 6;
-            pole[row + 1][column] = 6;
-            pole[row + 1][column + 1] = 6;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = 0;
+            tetrominoBlock2[1] = -1;
+            tetrominoBlock3[0] = 1;
+            tetrominoBlock3[1] = 0;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = 1;
+
             break;
         case 16:
-            pole[row][column] = 6;
-            pole[row - 1][column + 1] = 6;
-            pole[row][column + 1] = 6;
-            pole[row + 1][column] = 6;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = -1;
+            tetrominoBlock2[1] = 1;
+            tetrominoBlock3[0] = 0;
+            tetrominoBlock3[1] = 1;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = 0;
+
             break;
         case 7:
-            pole[row][column] = 7;
-            pole[row + 1][column] = 7;
-            pole[row + 1][column + 1] = 7;
-            pole[row + 1][column - 1] = 7;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = 1;
+            tetrominoBlock2[1] = 0;
+            tetrominoBlock3[0] = 1;
+            tetrominoBlock3[1] = 1;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = -1;
+
             break;
         case 17:
-            pole[row][column] = 7;
-            pole[row + 1][column] = 7;
-            pole[row + 2][column] = 7;
-            pole[row + 1][column + 1] = 7;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = 1;
+            tetrominoBlock2[1] = 0;
+            tetrominoBlock3[0] = 2;
+            tetrominoBlock3[1] = 0;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = 1;
+
             break;
         case 27:
-            pole[row + 2][column] = 7;
-            pole[row + 1][column] = 7;
-            pole[row + 1][column + 1] = 7;
-            pole[row + 1][column - 1] = 7;
+            tetrominoBlock1[0] = 2;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = 1;
+            tetrominoBlock2[1] = 0;
+            tetrominoBlock3[0] = 1;
+            tetrominoBlock3[1] = 1;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = -1;
+
             break;
         case 37:
-            pole[row][column] = 7;
-            pole[row + 1][column] = 7;
-            pole[row + 2][column] = 7;
-            pole[row + 1][column - 1] = 7;
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = 1;
+            tetrominoBlock2[1] = 0;
+            tetrominoBlock3[0] = 2;
+            tetrominoBlock3[1] = 0;
+            tetrominoBlock4[0] = 1;
+            tetrominoBlock4[1] = -1;
+
             break;
     }
+
+
+
+    pole[row + tetrominoBlock1[0]][column + tetrominoBlock1[1]] = tetrominoType%10;
+    pole[row + tetrominoBlock2[0]][column + tetrominoBlock2[1]] = tetrominoType%10;
+    pole[row + tetrominoBlock3[0]][column + tetrominoBlock3[1]] = tetrominoType%10;
+    pole[row + tetrominoBlock4[0]][column + tetrominoBlock4[1]] = tetrominoType%10;
 }
 
 void makeSolid() {
+    bagNum++;
     for (int j = 0; j < height; j++) {
         for (int i = 0; i < wight; i++) {
             metrix[j][i] = pole[j][i];
         }
     }
 
-    int x = rand() % 7 + 1;
+    if (bagNum > 6) {
+        random_shuffle(begin(randomBag), end(randomBag));
+        bagNum = 0;
+    }
+    tetrominoType = randomBag[bagNum];
 
-    if (x == tetrominoType) {
-        tetrominoType = x + 1;
-    }
-    else {
-        tetrominoType = x;
-    }
+
+
 
 
     row = 0;
     column = 4;
 }
 
-void floorCheck(int tetrominoType) {
+void floorCheck() {
 
-    switch (tetrominoType) {
-        case 1:
-            if (pole[row + 1][column - 2] || pole[row + 1][column - 1] ||
-                pole[row + 1][column] || pole[row + 1][column + 1] != 0) {
-                makeSolid();
-            }
-            break;
-        case 2:
-            if (pole[row + 2][column - 1] ||
-                pole[row + 2][column] || pole[row + 2][column + 1] != 0) {
-                makeSolid();
-                }
-            break;
-        case 3:
-            if (pole[row + 2][column - 1] ||
-                pole[row + 2][column] || pole[row + 2][column + 1] != 0) {
-                makeSolid();
-                }
-            break;
-        case 4:
-            if (pole[row + 2][column - 1] ||
-                pole[row + 2][column] != 0) {
-                makeSolid();
-                }
-            break;
-        case 5:
-            if (pole[row + 2][column - 1] || pole[row + 2][column] || pole[row + 1][column + 1] != 0) {
-                makeSolid();
-                }
-            break;
-        case 6:
-            if (pole[row + 1][column - 1] || pole[row + 2][column] || pole[row + 2][column + 1] != 0) {
-                makeSolid();
-            }
-            break;
-        case 7:
-            if (pole[row + 2][column - 1] ||
-                pole[row + 2][column] || pole[row + 2][column + 1] != 0) {
-                makeSolid();
-                }
-            break;
+    if (pole[row + tetrominoBlock1[0]+1][column + tetrominoBlock1[1]] != 0) {
+        if (pole[row + tetrominoBlock1[0]+1][column + tetrominoBlock1[1]] != tetrominoType%10) {
+            makeSolid();
+        }
+        else if (pole[row + tetrominoBlock1[0]+1][column + tetrominoBlock1[1]] == tetrominoType%10 && pole[row + tetrominoBlock1[0]+1][column + tetrominoBlock1[1]] == metrix[row + tetrominoBlock1[0]+1][column + tetrominoBlock1[1]]) {
+            makeSolid();
+        }
+    }
+    if (pole[row + tetrominoBlock2[0]+1][column + tetrominoBlock2[1]] != 0) {
+        if (pole[row + tetrominoBlock2[0]+1][column + tetrominoBlock2[1]] != tetrominoType%10) {
+            makeSolid();
+        }
+        else if (pole[row + tetrominoBlock2[0]+1][column + tetrominoBlock2[1]] == tetrominoType%10 && pole[row + tetrominoBlock2[0]+1][column + tetrominoBlock2[1]] == metrix[row + tetrominoBlock2[0]+1][column + tetrominoBlock2[1]]) {
+            makeSolid();
+        }
+    }
+    if (pole[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]] != 0) {
+        if (pole[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]] != tetrominoType%10) {
+            makeSolid();
+        }
+        else if (pole[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]] == tetrominoType%10 && pole[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]] == metrix[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]]) {
+            makeSolid();
+        }
+
+    }
+    if (pole[row + tetrominoBlock4[0]+1][column + tetrominoBlock4[1]] != 0) {
+        if (pole[row + tetrominoBlock4[0]+1][column + tetrominoBlock4[1]] != tetrominoType%10) {
+            makeSolid();
+        }
+        else if (pole[row + tetrominoBlock4[0]+1][column + tetrominoBlock4[1]] == tetrominoType%10 && pole[row + tetrominoBlock4[0]+1][column + tetrominoBlock4[1]] == metrix[row + tetrominoBlock4[0]+1][column + tetrominoBlock4[1]]) {
+            makeSolid();
+        }
     }
 
 }
@@ -401,7 +504,7 @@ int run(int inputValue) {
             update();
             break;
         case -1:
-            floorCheck(tetrominoType);
+            floorCheck();
             row++;
             update();
             break;
@@ -440,7 +543,7 @@ int input() {
 
 void fall() {
     if (tenFrame == 10) {
-        floorCheck(tetrominoType);
+        floorCheck();
         row++;
         update();
     }
@@ -449,13 +552,13 @@ void fall() {
 
 int main() {
     srand(time(NULL));
-    //tetrominoType = rand() % 7 + 1;
-
+    random_shuffle(begin(randomBag), end(randomBag));
+    tetrominoType = randomBag[bagNum];
     SetConsoleOutputCP(CP_UTF8);
     while (true) {
         input();
         fall();
-        cout<<tetrominoType;
+        cout<<randomBag[0]<<randomBag[1]<<randomBag[2]<<randomBag[3]<<randomBag[4]<<randomBag[5]<<randomBag[6]<<endl;
         if (tenFrame == 10) {
             tenFrame = 0;
         }
