@@ -397,6 +397,33 @@ void tetromino(int tetrominoType) {
     pole[row + tetrominoBlock4[0]][column + tetrominoBlock4[1]] = tetrominoType%10;
 }
 
+void destroy() {
+    int x = 0;
+    for (int j = 0; j < height; j++) {
+        for (int i = 0; i < wight; i++) {
+            if (metrix[j][i] != 0 && metrix[j][i] != 8) {
+                x++;
+            }
+        }
+        if (x == 10) {
+
+            int line = j, q = 0;
+
+            for (int i = 0; i < wight; i++) {
+                metrix[line][i] = 0;
+            }
+            for (int k = line; k > 0; k--) {
+                for (int i = 0; i < wight; i++) {
+                    metrix[line-q][i] = metrix[line - (q + 1)][i];
+                }
+                q++;
+            }
+        }
+        x = 0;
+    }
+}
+
+
 void makeSolid() {
     bagNum++;
     for (int j = 0; j < height; j++) {
@@ -411,7 +438,7 @@ void makeSolid() {
     }
     tetrominoType = randomBag[bagNum];
 
-
+    destroy();
 
 
 
@@ -454,8 +481,8 @@ void floorCheck() {
             makeSolid();
         }
     }
-
 }
+
 
 void renderBlockType() {
     tetromino(tetrominoType);
@@ -464,6 +491,7 @@ void renderBlockType() {
 //Tetrominos
 
 //-------GAMEPLAY------------------
+
 
 int update() {
     preframe();
@@ -550,6 +578,8 @@ void fall() {
 }
 
 
+
+
 int main() {
     srand(time(NULL));
     random_shuffle(begin(randomBag), end(randomBag));
@@ -558,7 +588,6 @@ int main() {
     while (true) {
         input();
         fall();
-        cout<<randomBag[0]<<randomBag[1]<<randomBag[2]<<randomBag[3]<<randomBag[4]<<randomBag[5]<<randomBag[6]<<endl;
         if (tenFrame == 10) {
             tenFrame = 0;
         }
