@@ -8,6 +8,7 @@
 using namespace std;
 
 
+string dysplay;
 
 bool gameIsRunning = true;
 
@@ -17,66 +18,79 @@ int tenFrame = 10;
 int randomBag[7] = {1, 2, 3, 4, 5, 6, 7};
 int bagNum = 0;
 
-int row = 0, column = 4;
+int row = 0, column = 5;
 int tetrominoType;
 int tetrominoBlock1[2], tetrominoBlock2[2], tetrominoBlock3[2], tetrominoBlock4[2];
 
-int height = 21, width = 10;
-int pole[21][10] = {
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}
+int height = 21, width = 12;
+int pole[21][12] = {
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}
     };
 
-int metrix[21][10] = {
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}
+int metrix[21][12] = {
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8},
+    {8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8}
     };
 
 //------------------------------PRESETS------------------------
 
-void SetColor(int textColor, int bgColor)
-{
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hConsole,
-                            (bgColor << 4) | textColor);
+void enableANSI() {
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    GetConsoleMode(hOut, &dwMode);
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hOut, dwMode);
+}
+
+void SetColor(int r, int g, int b, int br = -1, int bg = -1, int bb = -1) {
+    dysplay += "\033[38;2;" + to_string(r) += ";" + to_string(g) + ";" + to_string(b) + "m";
+
+    if (br >= 0 && bg >= 0 && bb >= 0) {
+        dysplay += "\033[48;2;" + to_string(br) + ";" + to_string(bg) + ";" + to_string(bb) + "m";
+    }
+}
+
+void ResetColor() {
+    dysplay += "\033[0m";
 }
 
 void block(int renderBlockType)
@@ -84,47 +98,52 @@ void block(int renderBlockType)
 
     switch(renderBlockType) {
         case 0:
-            SetColor(8, 0);
-            cout << "███";
+            SetColor(115, 115, 115);
+            dysplay += "███";
             break;
         case 1:
-            SetColor(9, 0);
-            cout << "███";
+            SetColor(149, 255, 255, 21, 197, 232);
+            dysplay += "░▒█";
+            ResetColor();
             break;
         case 2:
-            SetColor(1, 0);
-            cout << "███";
+            SetColor(115, 119, 240, 56, 58, 181);
+            dysplay += "░▒█";
+            ResetColor();
             break;
         case 3:
-            SetColor(6, 0);
-            cout << "███";
+            SetColor(255, 167, 0, 224, 97, 0);
+            dysplay += "░▒█";
+            ResetColor();
             break;
         case 4:
-            SetColor(14, 0);
-            cout << "███";
+            SetColor(255, 229, 1, 207, 172, 0);
+            dysplay += "░▒█";
+            ResetColor();
             break;
         case 5:
-            SetColor(2, 0);
-            cout << "███";
+            SetColor(111, 209, 88, 84, 125, 59);
+            dysplay += "░▒█";
+            ResetColor();
             break;
         case 6:
-            SetColor(4, 0);
-            cout << "███";
+            SetColor(204, 47, 12, 140, 33, 8);
+            dysplay += "░▒█";
+            ResetColor();
             break;
         case 7:
-            SetColor(5, 0);
-            cout << "███";
+            SetColor(128, 41, 190, 93, 30, 138);
+            dysplay += "░▒█";
+            ResetColor();
             break;
         case 8:
-            SetColor(7, 0);
-            cout << "███";
+            SetColor(237, 237, 237);
+            dysplay += "███";
+            ResetColor();
             break;
-        case 9:
-            SetColor(14, 0);
-            cout << "███";
-            break;
-        default: SetColor(8, 0);
-            cout << "███"; ;
+        default: SetColor(0, 0, 0);
+            dysplay += "███";
+            ResetColor();
     }
 }
 
@@ -157,15 +176,16 @@ int rendering() {
             else if (pole[j][i] == 8) {
                 block(8);
             }
-            else if (pole[j][i] == 9) {
-                block(9);
+            else if (pole[j][i] == 11) {
+                block(11);
             }
             else {
                 block(0);
             }
         }
-        cout << endl;
+        dysplay += "\n";
     }
+    cout<<dysplay;
     return 0;
 }
 
@@ -462,38 +482,13 @@ void makeSolid() {
 
 void floorCheck() {
 
-    if (pole[row + tetrominoBlock1[0]+1][column + tetrominoBlock1[1]] != 0) {
-        if (pole[row + tetrominoBlock1[0]+1][column + tetrominoBlock1[1]] != tetrominoType%10) {
-            makeSolid();
-        }
-        else if (pole[row + tetrominoBlock1[0]+1][column + tetrominoBlock1[1]] == tetrominoType%10 && pole[row + tetrominoBlock1[0]+1][column + tetrominoBlock1[1]] == metrix[row + tetrominoBlock1[0]+1][column + tetrominoBlock1[1]]) {
-            makeSolid();
-        }
+    if (metrix[row + tetrominoBlock1[0]+1][column + tetrominoBlock1[1]] != 0 ||
+        metrix[row + tetrominoBlock2[0]+1][column + tetrominoBlock2[1]] != 0 ||
+        metrix[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]] != 0 ||
+        metrix[row + tetrominoBlock4[0]+1][column + tetrominoBlock4[1]] != 0 ) {
+        makeSolid();
     }
-    if (pole[row + tetrominoBlock2[0]+1][column + tetrominoBlock2[1]] != 0) {
-        if (pole[row + tetrominoBlock2[0]+1][column + tetrominoBlock2[1]] != tetrominoType%10) {
-            makeSolid();
-        }
-        else if (pole[row + tetrominoBlock2[0]+1][column + tetrominoBlock2[1]] == tetrominoType%10 && pole[row + tetrominoBlock2[0]+1][column + tetrominoBlock2[1]] == metrix[row + tetrominoBlock2[0]+1][column + tetrominoBlock2[1]]) {
-            makeSolid();
-        }
-    }
-    if (pole[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]] != 0) {
-        if (pole[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]] != tetrominoType%10) {
-            makeSolid();
-        }
-        else if (pole[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]] == tetrominoType%10 && pole[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]] == metrix[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]]) {
-            makeSolid();
-        }
-    }
-    if (pole[row + tetrominoBlock4[0]+1][column + tetrominoBlock4[1]] != 0) {
-        if (pole[row + tetrominoBlock4[0]+1][column + tetrominoBlock4[1]] != tetrominoType%10) {
-            makeSolid();
-        }
-        else if (pole[row + tetrominoBlock4[0]+1][column + tetrominoBlock4[1]] == tetrominoType%10 && pole[row + tetrominoBlock4[0]+1][column + tetrominoBlock4[1]] == metrix[row + tetrominoBlock4[0]+1][column + tetrominoBlock4[1]]) {
-            makeSolid();
-        }
-    }
+
 }
 
 
@@ -507,6 +502,7 @@ void renderBlockType() {
 
 
 int update() {
+    dysplay = "";
     preframe();
     renderBlockType();
     rendering();
@@ -574,9 +570,7 @@ int input() {
     }
     else if (GetAsyncKeyState('D') & 0x8000 && !(GetAsyncKeyState('A') & 0x8000)) {
         inputValue = 1;
-        if (column + tetrominoBlock1[1] != 9 && column + tetrominoBlock2[1] != 9 &&
-            column + tetrominoBlock3[1] != 9 && column + tetrominoBlock4[1] != 9 &&
-            metrix[row + tetrominoBlock1[0]][column + tetrominoBlock1[1]+1] == 0 &&
+        if (metrix[row + tetrominoBlock1[0]][column + tetrominoBlock1[1]+1] == 0 &&
             metrix[row + tetrominoBlock2[0]][column + tetrominoBlock2[1]+1] == 0 &&
             metrix[row + tetrominoBlock3[0]][column + tetrominoBlock3[1]+1] == 0 &&
             metrix[row + tetrominoBlock4[0]][column + tetrominoBlock4[1]+1] == 0) {
@@ -589,9 +583,7 @@ int input() {
     }
     else if (GetAsyncKeyState('A') & 0x8000 && !(GetAsyncKeyState('D') & 0x8000)) {
         inputValue = 2;
-        if (column + tetrominoBlock1[1] != 0 && column + tetrominoBlock2[1] != 0 &&
-            column + tetrominoBlock3[1] != 0 && column + tetrominoBlock4[1] != 0 &&
-            metrix[row + tetrominoBlock1[0]][column + tetrominoBlock1[1]-1] == 0 &&
+        if (metrix[row + tetrominoBlock1[0]][column + tetrominoBlock1[1]-1] == 0 &&
             metrix[row + tetrominoBlock2[0]][column + tetrominoBlock2[1]-1] == 0 &&
             metrix[row + tetrominoBlock3[0]][column + tetrominoBlock3[1]-1] == 0 &&
             metrix[row + tetrominoBlock4[0]][column + tetrominoBlock4[1]-1] == 0) {
@@ -635,7 +627,6 @@ int main() {
         if (tenFrame == 10) {
             tenFrame = 0;
         }
-
         _sleep(100);
         tenFrame++;
     }
