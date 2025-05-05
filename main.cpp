@@ -2,6 +2,8 @@
 #include <conio.h>
 #include <windows.h>
 #include <algorithm>
+#include <ctime>
+#include <random>
 //Ahoj kamoš!!
 using namespace std;
 
@@ -19,7 +21,7 @@ int row = 0, column = 4;
 int tetrominoType;
 int tetrominoBlock1[2], tetrominoBlock2[2], tetrominoBlock3[2], tetrominoBlock4[2];
 
-int height = 21, wight = 10;
+int height = 21, width = 10;
 int pole[21][10] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -121,6 +123,8 @@ void block(int renderBlockType)
             SetColor(14, 0);
             cout << "███";
             break;
+        default: SetColor(8, 0);
+            cout << "███"; ;
     }
 }
 
@@ -128,7 +132,7 @@ void block(int renderBlockType)
 int rendering() {
     system("cls");
     for (int j = 0; j < height; j++) {
-        for (int i = 0; i < wight; i++) {
+        for (int i = 0; i < width; i++) {
             if (pole[j][i] == 1) {
                 block(1);
             }
@@ -167,7 +171,7 @@ int rendering() {
 
 void preframe() {
     for (int j = 0; j < height; j++) {
-        for (int i = 0; i < wight; i++) {
+        for (int i = 0; i < width; i++) {
             pole[j][i] = metrix[j][i];
         }
     }
@@ -387,6 +391,15 @@ void tetromino(int tetrominoType) {
             tetrominoBlock4[1] = -1;
 
             break;
+        default:
+            tetrominoBlock1[0] = 0;
+            tetrominoBlock1[1] = 0;
+            tetrominoBlock2[0] = 0;
+            tetrominoBlock2[1] = 0;
+            tetrominoBlock3[0] = 0;
+            tetrominoBlock3[1] = 0;
+            tetrominoBlock4[0] = 0;
+            tetrominoBlock4[1] = 0;;
     }
 
 
@@ -400,7 +413,7 @@ void tetromino(int tetrominoType) {
 void destroy() {
     int x = 0;
     for (int j = 0; j < height; j++) {
-        for (int i = 0; i < wight; i++) {
+        for (int i = 0; i < width; i++) {
             if (metrix[j][i] != 0 && metrix[j][i] != 8) {
                 x++;
             }
@@ -409,11 +422,11 @@ void destroy() {
 
             int line = j, q = 0;
 
-            for (int i = 0; i < wight; i++) {
+            for (int i = 0; i < width; i++) {
                 metrix[line][i] = 0;
             }
             for (int k = line; k > 0; k--) {
-                for (int i = 0; i < wight; i++) {
+                for (int i = 0; i < width; i++) {
                     metrix[line-q][i] = metrix[line - (q + 1)][i];
                 }
                 q++;
@@ -427,13 +440,13 @@ void destroy() {
 void makeSolid() {
     bagNum++;
     for (int j = 0; j < height; j++) {
-        for (int i = 0; i < wight; i++) {
+        for (int i = 0; i < width; i++) {
             metrix[j][i] = pole[j][i];
         }
     }
 
     if (bagNum > 6) {
-        random_shuffle(begin(randomBag), end(randomBag));
+        shuffle(begin(randomBag), end(randomBag), std::mt19937(std::random_device()()));
         bagNum = 0;
     }
     tetrominoType = randomBag[bagNum];
@@ -445,6 +458,7 @@ void makeSolid() {
     row = 0;
     column = 4;
 }
+
 
 void floorCheck() {
 
@@ -471,7 +485,6 @@ void floorCheck() {
         else if (pole[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]] == tetrominoType%10 && pole[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]] == metrix[row + tetrominoBlock3[0]+1][column + tetrominoBlock3[1]]) {
             makeSolid();
         }
-
     }
     if (pole[row + tetrominoBlock4[0]+1][column + tetrominoBlock4[1]] != 0) {
         if (pole[row + tetrominoBlock4[0]+1][column + tetrominoBlock4[1]] != tetrominoType%10) {
@@ -508,6 +521,10 @@ int rotate() {
         if (tetrominoType > 16) {
             tetrominoType = tetrominoType - 20;
         }
+        else {
+            return 0;
+        }
+
     }
     else if (tetrominoType % 10 == 2 || tetrominoType % 10 == 3|| tetrominoType % 10 == 7) {
             tetrominoType = tetrominoType + 10;
@@ -515,6 +532,12 @@ int rotate() {
         if (tetrominoType > 37) {
             tetrominoType = tetrominoType - 40;
         }
+        else {
+            return 0;
+        }
+    }
+    else {
+        return 0;
     }
     return 0;
 }
@@ -551,11 +574,32 @@ int input() {
     }
     else if (GetAsyncKeyState('D') & 0x8000 && !(GetAsyncKeyState('A') & 0x8000)) {
         inputValue = 1;
-        run(inputValue);
+        if (column + tetrominoBlock1[1] != 9 && column + tetrominoBlock2[1] != 9 &&
+            column + tetrominoBlock3[1] != 9 && column + tetrominoBlock4[1] != 9 &&
+            metrix[row + tetrominoBlock1[0]][column + tetrominoBlock1[1]+1] == 0 &&
+            metrix[row + tetrominoBlock2[0]][column + tetrominoBlock2[1]+1] == 0 &&
+            metrix[row + tetrominoBlock3[0]][column + tetrominoBlock3[1]+1] == 0 &&
+            metrix[row + tetrominoBlock4[0]][column + tetrominoBlock4[1]+1] == 0) {
+            run(inputValue);
+        }
+        else {
+            return 0;
+        }
+
     }
     else if (GetAsyncKeyState('A') & 0x8000 && !(GetAsyncKeyState('D') & 0x8000)) {
         inputValue = 2;
-        run(inputValue);
+        if (column + tetrominoBlock1[1] != 0 && column + tetrominoBlock2[1] != 0 &&
+            column + tetrominoBlock3[1] != 0 && column + tetrominoBlock4[1] != 0 &&
+            metrix[row + tetrominoBlock1[0]][column + tetrominoBlock1[1]-1] == 0 &&
+            metrix[row + tetrominoBlock2[0]][column + tetrominoBlock2[1]-1] == 0 &&
+            metrix[row + tetrominoBlock3[0]][column + tetrominoBlock3[1]-1] == 0 &&
+            metrix[row + tetrominoBlock4[0]][column + tetrominoBlock4[1]-1] == 0) {
+            run(inputValue);
+        }
+        else {
+            return 0;
+        }
     }
     else if (GetAsyncKeyState(0x20) & 0x8000) {
         inputValue = 3;
