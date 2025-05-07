@@ -12,6 +12,10 @@ string dysplay;
 
 bool gameIsRunning = true;
 
+int level = 1;
+int bonus;
+int score = 0;
+
 int inputValue = 0;
 int tenFrame = 10;
 
@@ -93,100 +97,59 @@ void ResetColor() {
     dysplay += "\033[0m";
 }
 
-void block(int renderBlockType)
-{
-
-    switch(renderBlockType) {
-        case 0:
-            SetColor(115, 115, 115);
-            dysplay += "███";
-            break;
-        case 1:
-            SetColor(149, 255, 255, 21, 197, 232);
-            dysplay += "░▒█";
-            ResetColor();
-            break;
-        case 2:
-            SetColor(115, 119, 240, 56, 58, 181);
-            dysplay += "░▒█";
-            ResetColor();
-            break;
-        case 3:
-            SetColor(255, 167, 0, 224, 97, 0);
-            dysplay += "░▒█";
-            ResetColor();
-            break;
-        case 4:
-            SetColor(255, 229, 1, 207, 172, 0);
-            dysplay += "░▒█";
-            ResetColor();
-            break;
-        case 5:
-            SetColor(111, 209, 88, 84, 125, 59);
-            dysplay += "░▒█";
-            ResetColor();
-            break;
-        case 6:
-            SetColor(204, 47, 12, 140, 33, 8);
-            dysplay += "░▒█";
-            ResetColor();
-            break;
-        case 7:
-            SetColor(128, 41, 190, 93, 30, 138);
-            dysplay += "░▒█";
-            ResetColor();
-            break;
-        case 8:
-            SetColor(237, 237, 237);
-            dysplay += "███";
-            ResetColor();
-            break;
-        default: SetColor(0, 0, 0);
-            dysplay += "███";
-            ResetColor();
-    }
-}
-
 //-----------RENDERING------------------------------
-int rendering() {
+void rendering() {
     system("cls");
     for (int j = 0; j < height; j++) {
         for (int i = 0; i < width; i++) {
-            if (pole[j][i] == 1) {
-                block(1);
+            if (pole[j][i] == 0) {
+                SetColor(115, 115, 115);
+                dysplay += "███";
+            }
+            else if (pole[j][i] == 1) {
+                SetColor(149, 255, 255, 21, 197, 232);
+                dysplay += "░▒█";
+                ResetColor();
             }
             else if (pole[j][i] == 2) {
-                block(2);
+                SetColor(115, 119, 240, 56, 58, 181);
+                dysplay += "░▒█";
+                ResetColor();
             }
             else if (pole[j][i] == 3) {
-                block(3);
+                SetColor(255, 167, 0, 224, 97, 0);
+                dysplay += "░▒█";
+                ResetColor();
             }
             else if (pole[j][i] == 4) {
-                block(4);
+                SetColor(255, 229, 1, 207, 172, 0);
+                dysplay += "░▒█";
+                ResetColor();
             }
             else if (pole[j][i] == 5) {
-                block(5);
+                SetColor(111, 209, 88, 84, 125, 59);
+                dysplay += "░▒█";
+                ResetColor();
             }
             else if (pole[j][i] == 6) {
-                block(6);
+                SetColor(204, 47, 12, 140, 33, 8);
+                dysplay += "░▒█";
+                ResetColor();
             }
             else if (pole[j][i] == 7) {
-                block(7);
+                SetColor(128, 41, 190, 93, 30, 138);
+                dysplay += "░▒█";
+                ResetColor();
             }
             else if (pole[j][i] == 8) {
-                block(8);
-            }
-            else if (pole[j][i] == 11) {
-                block(11);
-            }
-            else {
-                block(0);
+                SetColor(237, 237, 237);
+                dysplay += "███";
+                ResetColor();
             }
         }
         dysplay += "\n";
     }
     cout<<dysplay;
-    return 0;
 }
 
 void preframe() {
@@ -451,9 +414,11 @@ void destroy() {
                 }
                 q++;
             }
+            bonus++;
         }
         x = 0;
     }
+    score = score + (level * bonus * 100);
 }
 
 
@@ -493,6 +458,7 @@ void floorCheck() {
 
 
 void renderBlockType() {
+    bonus = 0;
     tetromino(tetrominoType);
 }
 
@@ -501,15 +467,15 @@ void renderBlockType() {
 //-------GAMEPLAY------------------
 
 
-int update() {
+void update() {
     dysplay = "";
     preframe();
     renderBlockType();
+    cout<<score;
     rendering();
-    return 0;
 }
 
-int rotate() {
+void rotate() {
 
     if (tetrominoType % 10 == 1 || tetrominoType % 10 == 5|| tetrominoType % 10 == 6) {
             tetrominoType = tetrominoType + 10;
@@ -517,10 +483,6 @@ int rotate() {
         if (tetrominoType > 16) {
             tetrominoType = tetrominoType - 20;
         }
-        else {
-            return 0;
-        }
-
     }
     else if (tetrominoType % 10 == 2 || tetrominoType % 10 == 3|| tetrominoType % 10 == 7) {
             tetrominoType = tetrominoType + 10;
@@ -528,17 +490,10 @@ int rotate() {
         if (tetrominoType > 37) {
             tetrominoType = tetrominoType - 40;
         }
-        else {
-            return 0;
-        }
     }
-    else {
-        return 0;
-    }
-    return 0;
 }
 
-int run(int inputValue) {
+void run(int inputValue) {
 
     switch(inputValue) {
         case 1:
@@ -560,12 +515,12 @@ int run(int inputValue) {
             update();
             break;
     }
-    return 0;
 }
 
 int input() {
     if (GetAsyncKeyState('S') & 0x8000) {
         inputValue = -1;
+        //score++;
         run(inputValue);
     }
     else if (GetAsyncKeyState('D') & 0x8000 && !(GetAsyncKeyState('A') & 0x8000)) {
