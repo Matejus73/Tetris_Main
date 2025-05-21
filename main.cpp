@@ -1,20 +1,29 @@
+#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
+#include <windows.h>
 #include <iostream>
 #include <conio.h>
-#include <windows.h>
 #include <algorithm>
 #include <ctime>
 #include <random>
 //Ahoj kamoš!!
 using namespace std;
 
+void enableANSI() {
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    GetConsoleMode(hOut, &dwMode);
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hOut, dwMode);
+}
 
 string dysplay;
 
-bool gameIsRunning = true;
+bool gameOn = true;
 
 int level = 1;
 int bonus;
 int score = 0;
+string coutScore;
 
 int inputValue = 0;
 int tenFrame = 10;
@@ -77,13 +86,7 @@ int metrix[21][12] = {
 
 //------------------------------PRESETS------------------------
 
-void enableANSI() {
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    DWORD dwMode = 0;
-    GetConsoleMode(hOut, &dwMode);
-    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-    SetConsoleMode(hOut, dwMode);
-}
+
 
 void SetColor(int r, int g, int b, int br = -1, int bg = -1, int bb = -1) {
     dysplay += "\033[38;2;" + to_string(r) += ";" + to_string(g) + ";" + to_string(b) + "m";
@@ -102,6 +105,10 @@ void rendering() {
     system("cls");
     for (int j = 0; j < height; j++) {
         for (int i = 0; i < width; i++) {
+            if (metrix[1][i] != 8 && metrix[1][i] != 0) {
+                gameOn = false;
+            }
+
             if (pole[j][i] == 0) {
                 SetColor(115, 115, 115);
                 dysplay += "███";
@@ -148,6 +155,9 @@ void rendering() {
             }
         }
         dysplay += "\n";
+    }
+    for (int i=0; i < 12 ;i++) {
+
     }
     cout<<dysplay;
 }
@@ -418,7 +428,19 @@ void destroy() {
         }
         x = 0;
     }
-    score = score + (level * bonus * 100);
+    if (bonus == 1) {
+        score = score + (level * 40);
+    }
+    else if (bonus == 2) {
+        score = score + (level * 100);
+    }
+    else if (bonus == 3) {
+        score = score + (level * 300);
+    }
+    else if (bonus == 4) {
+        score = score + (level * 1200);
+    }
+
 }
 
 
@@ -462,6 +484,199 @@ void renderBlockType() {
     tetromino(tetrominoType);
 }
 
+void Score() {
+    coutScore = "";
+    int tempScore = score;
+    int count = 0;
+    while (tempScore >= 10) {
+        tempScore = tempScore / 10;
+        count++;
+    }
+    count++;
+
+    string scoreText = to_string(score);
+
+
+    for (int j = 0; j < 5; j++) {
+        for (int i = 0; i < count; i++) {
+            int scoreDigit = scoreText[i] - '0';
+            switch (scoreDigit) {
+                case 1:
+                    if (j == 0) {
+                        coutScore.append(" _   ");
+                    }
+                    else if (j == 1) {
+                        coutScore.append("/ |  ");
+                    }
+                    else if (j == 2) {
+                        coutScore.append("| |  ");
+                    }
+                    else if (j == 3) {
+                        coutScore.append("| |  ");
+                    }
+                    else if (j == 4) {
+                        coutScore.append("|_|  ");
+                    }
+                    break;
+                case 2:
+                    if (j == 0) {
+                        coutScore.append(" ____   ");
+                    }
+                    else if (j == 1) {
+                        coutScore.append("|___ \\  ");
+                    }
+                    else if (j == 2) {
+                        coutScore.append("  __) | ");
+                    }
+                    else if (j == 3) {
+                        coutScore.append(" / __/  ");
+                    }
+                    else if (j == 4) {
+                        coutScore.append("|_____| ");
+                    }
+                    break;
+                case 3:
+                    if (j == 0) {
+                        coutScore.append(" _____  ");
+                    }
+                    else if (j == 1) {
+                        coutScore.append("|___ /  ");
+                    }
+                    else if (j == 2) {
+                        coutScore.append("  |_ \\  ");
+                    }
+                    else if (j == 3) {
+                        coutScore.append(" ___) | ");
+                    }
+                    else if (j == 4) {
+                        coutScore.append("|____/ ");
+                    }
+                    break;
+                case 4:
+                    if (j == 0) {
+                        coutScore.append(" _  _   ");
+                    }
+                    else if (j == 1) {
+                        coutScore.append("| || |  ");
+                    }
+                    else if (j == 2) {
+                        coutScore.append("| || |_ ");
+                    }
+                    else if (j == 3) {
+                        coutScore.append("|__   _|");
+                    }
+                    else if (j == 4) {
+                        coutScore.append("   |_|  ");
+                    }
+                    break;
+                case 5:
+                    if (j == 0) {
+                        coutScore.append(" ____   ");
+                    }
+                    else if (j == 1) {
+                        coutScore.append("| ___|  ");
+                    }
+                    else if (j == 2) {
+                        coutScore.append("|___ \\  ");
+                    }
+                    else if (j == 3) {
+                        coutScore.append(" ___) | ");
+                    }
+                    else if (j == 4) {
+                        coutScore.append("|____/  ");
+                    }
+                    break;
+                case 6:
+                    if (j == 0) {
+                        coutScore.append("  __    ");
+                    }
+                    else if (j == 1) {
+                        coutScore.append(" / /_   ");
+                    }
+                    else if (j == 2) {
+                        coutScore.append("| '_ \\  ");
+                    }
+                    else if (j == 3) {
+                        coutScore.append("| (_) | ");
+                    }
+                    else if (j == 4) {
+                        coutScore.append(" \\___/  ");
+                    }
+                    break;
+                case 7:
+                    if (j == 0) {
+                        coutScore.append(" _____  ");
+                    }
+                    else if (j == 1) {
+                        coutScore.append("|___  | ");
+                    }
+                    else if (j == 2) {
+                        coutScore.append("   / /  ");
+                    }
+                    else if (j == 3) {
+                        coutScore.append("  / /   ");
+                    }
+                    else if (j == 4) {
+                        coutScore.append(" /_/    ");
+                    }
+                    break;
+                case 8:
+                    if (j == 0) {
+                        coutScore.append("  ___   ");
+                    }
+                    else if (j == 1) {
+                        coutScore.append(" ( _ )  ");
+                    }
+                    else if (j == 2) {
+                        coutScore.append(" / _ \\  ");
+                    }
+                    else if (j == 3) {
+                        coutScore.append("| (_) | ");
+                    }
+                    else if (j == 4) {
+                        coutScore.append(" \\___/  ");
+                    }
+                    break;
+                case 9:
+                    if (j == 0) {
+                        coutScore.append("  ___   ");
+                    }
+                    else if (j == 1) {
+                        coutScore.append(" / _ \\  ");
+                    }
+                    else if (j == 2) {
+                        coutScore.append("| (_) | ");
+                    }
+                    else if (j == 3) {
+                        coutScore.append(" \\__, | ");
+                    }
+                    else if (j == 4) {
+                        coutScore.append("   /_/  ");
+                    }
+                    break;
+                case 0:
+                    if (j == 0) {
+                        coutScore.append("  ___   ");
+                    }
+                    else if (j == 1) {
+                        coutScore.append(" / _ \\  ");
+                    }
+                    else if (j == 2) {
+                        coutScore.append("| | | | ");
+                    }
+                    else if (j == 3) {
+                        coutScore.append("| |_| | ");
+                    }
+                    else if (j == 4) {
+                        coutScore.append(" \\___/  ");
+                    }
+                    break;
+            }
+        }
+        coutScore.append(" \n");
+    }
+}
+
 //Tetrominos
 
 //-------GAMEPLAY------------------
@@ -471,8 +686,9 @@ void update() {
     dysplay = "";
     preframe();
     renderBlockType();
-    cout<<score;
+    Score();
     rendering();
+    cout<<coutScore;
 }
 
 void rotate() {
@@ -576,7 +792,7 @@ int main() {
     random_shuffle(begin(randomBag), end(randomBag));
     tetrominoType = randomBag[bagNum];
     SetConsoleOutputCP(CP_UTF8);
-    while (true) {
+    while (gameOn == true) {
         input();
         fall();
         if (tenFrame == 10) {
@@ -586,6 +802,20 @@ int main() {
         tenFrame++;
     }
 
+    system("cls");
+    cout << R"(
+   ██████╗  █████╗ ███╗   ███╗███████╗     ██████╗ ██╗   ██╗███████╗██████╗
+  ██╔════╝ ██╔══██╗████╗ ████║██╔════╝    ██╔═══██╗██║   ██║██╔════╝██╔══██╗
+  ██║  ███╗███████║██╔████╔██║█████╗      ██║   ██║██║   ██║█████╗  ██████╔╝
+  ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝      ██║   ██║ ██  ██╔╝██╔══╝  ██╔══██╗
+  ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗    ╚██████╔╝ ╚████╔╝ ███████╗██║  ██║
+   ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝     ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝
+    )";
+    int x = 0;
+    cout << "\n╔══════════════════╗\n";
+    cout << "      SCORE: " << score << "      \n";
+    cout << "╚══════════════════╝\n";
+    cin>>x;
     return 0;
 }
 
